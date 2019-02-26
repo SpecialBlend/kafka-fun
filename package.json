@@ -1,0 +1,43 @@
+{
+  "scripts": {
+    "test": "scripts/test.sh",
+    "coverage": "scripts/coverage.sh",
+    "lint": "scripts/lint.sh",
+    "build": "scripts/build.sh",
+    "check": "scripts/check.sh"
+  },
+  "devDependencies": {
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/node": "latest",
+    "@babel/preset-env": "latest",
+    "babel-core": "bridge",
+    "babel-jest": "latest",
+    "babel-loader": "latest",
+    "eslint": "latest",
+    "eslint-plugin-babel": "latest",
+    "jest": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git"
+  },
+  "name": "kafka-fun",
+  "version": "0.1.0",
+  "description": "fluent, functional kafka workers",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpecialBlend/kafka-fun.git"
+  },
+  "keywords": [
+    "functional",
+    "kafka",
+    "worker"
+  ],
+  "author": "cj@specialblend.net",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpecialBlend/kafka-fun/issues"
+  },
+  "homepage": "https://github.com/SpecialBlend/kafka-fun#readme"
+}
