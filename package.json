@@ -21,6 +21,9 @@
     "webpack-cli": "latest",
     "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git"
   },
+  "peerDependencies": {
+    "kafka-node": "^4.x.x"
+  },
   "name": "kafka-fun",
   "version": "0.1.0",
   "description": "fluent, functional kafka workers",
@@ -39,5 +42,10 @@
   "bugs": {
     "url": "https://github.com/SpecialBlend/kafka-fun/issues"
   },
-  "homepage": "https://github.com/SpecialBlend/kafka-fun#readme"
+  "homepage": "https://github.com/SpecialBlend/kafka-fun#readme",
+  "dependencies": {
+    "fiterator": "^1.2.1",
+    "kafka-node": "^4.0.2",
+    "ramda": "^0.26.1"
+  }
 }
