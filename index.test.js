@@ -13,15 +13,4 @@ describe('index.js', () => {
         expect(kafka).toHaveProperty('Consumer', expect.any(Function));
         expect(kafka).toHaveProperty('Producer', expect.any(Function));
     });
-    test('exports mocks', () => {
-        const mocks = require('./dist/__mocks__');
-        expect(mocks).toHaveProperty('__kafkaClientConstruct', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaConsumerConstruct', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaConsumerRegisterEventListener', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaProducerConstruct', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaProducerRegisterEventListener', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaProducerSend', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaProducerOnError', expect.any(Function));
-        expect(mocks).toHaveProperty('__kafkaProducerQueryMockStatus', expect.any(Function));
-    });
 });
