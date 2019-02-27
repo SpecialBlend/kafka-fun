@@ -18,6 +18,7 @@
     "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git",
     "eslint-plugin-babel": "latest",
     "jest": "latest",
+    "ramda": "^0.26.1",
     "should": "^13.2.3",
     "webpack": "latest",
     "webpack-cli": "latest"
@@ -41,7 +42,6 @@
   },
   "homepage": "https://github.com/SpecialBlend/kafka-pipe#readme",
   "dependencies": {
-    "kafka-node": "^4.0.2",
-    "ramda": "^0.26.1"
+    "kafka-node": "^4.0.2"
   }
 }
