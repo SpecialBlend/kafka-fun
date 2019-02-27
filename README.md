@@ -97,6 +97,10 @@ consumer
 
 ### createProducer
 
+#### summary
+
+higher order function that returns a curried `Producer.send` function which, when called, sends the given payload to the previously set topic
+
 #### definition
 
 ```
@@ -138,7 +142,7 @@ sendToTestTopic([message])
 
 #### summary
 
-function that returns a `PipeConsumer`, which pipes messages from `sourceTopic`, thru provided `transformer` function, then into `destinationTopic`
+function that returns a `PipeConsumer`, which pipes messages from `sourceTopic`, thru provided `transform` function, then into `destinationTopic`
 
 #### definition
 
