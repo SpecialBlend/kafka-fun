@@ -24,7 +24,7 @@
     "webpack-cli": "latest"
   },
   "name": "kafka-pipe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "functional programming utility for kafka",
   "main": "index.js",
   "repository": {

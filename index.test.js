@@ -1,11 +1,16 @@
 /* eslint-disable no-shadow,no-sync */
 
 describe('index.js', () => {
-    const k = require('.');
+    const kafka = require('.');
     test('exports expected functions and classes', () => {
-        expect(k).toHaveProperty('PipeConsumer', expect.any(Function));
-        expect(k).toHaveProperty('createConsumer', expect.any(Function));
-        expect(k).toHaveProperty('createProducer', expect.any(Function));
-        expect(k).toHaveProperty('createTransformer', expect.any(Function));
+        expect(kafka).toHaveProperty('PipeConsumer', expect.any(Function));
+        expect(kafka).toHaveProperty('createConsumer', expect.any(Function));
+        expect(kafka).toHaveProperty('createProducer', expect.any(Function));
+        expect(kafka).toHaveProperty('createTransformer', expect.any(Function));
+    });
+    test('exports legacy classes', () => {
+        expect(kafka).toHaveProperty('Client', expect.any(Function));
+        expect(kafka).toHaveProperty('Consumer', expect.any(Function));
+        expect(kafka).toHaveProperty('Producer', expect.any(Function));
     });
 });
