@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-npm run build
-npm run test-only
+npm run test
 npm run coverage
 npm run lint
+npm run build
