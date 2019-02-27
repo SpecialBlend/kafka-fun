@@ -19,8 +19,8 @@ export class PipeConsumer extends Consumer {
  * Create Piped Consumer
  * @param {KafkaClient} client: kafka client
  * @param {String} topic: name of topic
- * @param {Object|null} topicSettings: optional topic settings
- * @param {Object|null} options: optional consumer settings
+ * @param {Object|none} topicSettings: optional topic settings
+ * @param {Object|none} options: optional consumer settings
  * @return {PipeConsumer}: PipeConsumer
  */
 export const createConsumer = (client, topic, topicSettings = {}, options = {}) =>
