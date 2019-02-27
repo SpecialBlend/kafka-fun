@@ -24,7 +24,7 @@
   },
   "name": "kafka-pipe",
   "version": "0.1.0",
-  "description": "functional programming utility for kafka consumers and producer",
+  "description": "functional programming utility for kafka",
   "main": "index.js",
   "repository": {
     "type": "git",
