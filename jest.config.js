@@ -20,6 +20,6 @@ module.exports = {
         '<rootDir>/webpack.config.js',
     ],
     globalSetup: './__mocks__/setup-test-environment.js',
-    setupTestFrameworkScriptFile: './__mocks__/setup-test-framework.js',
+    setupFilesAfterEnv: ['./__mocks__/setup-test-framework.js'],
     testEnvironment: 'node',
 };
