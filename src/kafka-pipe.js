@@ -3,6 +3,8 @@
 import { Consumer, Producer } from 'kafka-node';
 import { promisify } from 'util';
 
+export { KafkaClient as Client } from 'kafka-node';
+
 /**
  * Extend Kafka Consumer class to add pipe method
  */
