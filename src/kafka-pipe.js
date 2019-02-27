@@ -15,6 +15,13 @@ export class PipeConsumer extends Consumer {
     }
 }
 
+export class PipeProducer extends Producer {
+    async send(payloads) {
+        const producerSend = promisify(super.send.bind(this));
+        return producerSend(payloads);
+    }
+}
+
 /**
  * Create Piped Consumer
  * @param {KafkaClient} client: kafka client
@@ -34,10 +41,9 @@ export const createConsumer = (client, topic, topicSettings = {}, options = {}) 
  * @param {Object|null} options: optional producer settings
  * @return {Function}: The resulting curried send function
  */
-export const createProducer = (client, topic, sendSettings = {}, options = {}) => {
-    const producer = new Producer(client, options);
-    const producerSend = promisify(producer.send.bind(producer));
-    return messages => producerSend([{
+export const createSender = (client, topic, sendSettings = {}, options = {}) => {
+    const producer = new PipeProducer(client, options);
+    return messages => producer.send([{
         ...sendSettings,
         topic,
         messages,
@@ -53,7 +59,7 @@ export const createProducer = (client, topic, sendSettings = {}, options = {}) =
  * @return {PipeConsumer}: PipeConsumer
  */
 export const createTransformer = (client, sourceTopic, destinationTopic, transform) => {
-    const sendToDestination = createProducer(client, destinationTopic);
+    const sendToDestination = createSender(client, destinationTopic);
     const consumer = createConsumer(client, sourceTopic);
     consumer.pipe(message => sendToDestination([transform(message)]));
     return consumer;
