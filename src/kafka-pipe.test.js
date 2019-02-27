@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { KafkaClient } from 'kafka-node';
-import { createConsumer, createProducer, createTransformer, PipeConsumer } from './kafka-pipe';
+import { createConsumer, createSender, createTransformer, PipeConsumer } from './kafka-pipe';
 import { __kafkaConsumerConstruct, __kafkaProducerConstruct, __kafkaProducerSend } from '../__mocks__/kafka-node';
 
 describe('createConsumer', () => {
@@ -34,7 +34,7 @@ describe('createConsumer', () => {
     });
 });
 
-describe('createProducer', () => {
+describe('createSender', () => {
     const client = new KafkaClient();
     const topic = 'test.topic';
     const key = 'test.key';
@@ -46,7 +46,7 @@ describe('createProducer', () => {
     const optionalProducerSettings = {
         ackTimeoutMs: 500,
     };
-    const sendToTopic = createProducer(client, topic, optionalSendSettings, optionalProducerSettings);
+    const sendToTopic = createSender(client, topic, optionalSendSettings, optionalProducerSettings);
     test('returns instance of Function', () => {
         expect(typeof sendToTopic).toBe('function');
     });
