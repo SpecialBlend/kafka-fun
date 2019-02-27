@@ -6,7 +6,7 @@ import { promisify } from 'util';
 export { KafkaClient as Client } from 'kafka-node';
 
 /**
- * Extend Kafka Consumer class to add pipe method
+ * Extend kafka-node Consumer class to add pipe method
  */
 export class PipeConsumer extends Consumer {
     pipe(resolve) {
@@ -15,6 +15,9 @@ export class PipeConsumer extends Consumer {
     }
 }
 
+/**
+ * Extend kafka-node Producer class to promisify send method
+ */
 export class PipeProducer extends Producer {
     async send(payloads) {
         const producerSend = promisify(super.send.bind(this));
