@@ -1,3 +1,5 @@
+jest.mock('kafka-node');
+
 const { log, error } = console;
 
 /**
