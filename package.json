@@ -15,29 +15,33 @@
     "babel-jest": "latest",
     "babel-loader": "latest",
     "eslint": "latest",
+    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git",
     "eslint-plugin-babel": "latest",
     "jest": "latest",
+    "ramda": "^0.26.1",
+    "should": "^13.2.3",
     "webpack": "latest",
-    "webpack-cli": "latest",
-    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git"
+    "webpack-cli": "latest"
   },
-  "name": "kafka-fun",
+  "name": "kafka-pipe",
   "version": "0.1.0",
-  "description": "fluent, functional kafka workers",
+  "description": "functional programming utility for kafka",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SpecialBlend/kafka-fun.git"
+    "url": "git+https://github.com/SpecialBlend/kafka-pipe.git"
   },
   "keywords": [
     "functional",
-    "kafka",
-    "worker"
+    "kafka"
   ],
   "author": "cj@specialblend.net",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SpecialBlend/kafka-fun/issues"
+    "url": "https://github.com/SpecialBlend/kafka-pipe/issues"
   },
-  "homepage": "https://github.com/SpecialBlend/kafka-fun#readme"
+  "homepage": "https://github.com/SpecialBlend/kafka-pipe#readme",
+  "dependencies": {
+    "kafka-node": "^4.0.2"
+  }
 }
