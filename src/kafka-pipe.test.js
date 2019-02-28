@@ -85,16 +85,19 @@ describe('createSender', () => {
 });
 
 describe('createTransformer', () => {
-    __kafkaConsumerConstruct.mockReset();
-    __kafkaProducerConstruct.mockReset();
-    __kafkaProducerSend.mockReset();
     const client = new KafkaClient();
     const sourceTopic = 'test.source.topic';
     const destinationTopic = 'test.destination.topic';
     const transform = jest.fn(R.reverse);
-    const transformer = createTransformer(client, sourceTopic, destinationTopic, transform);
     const message = 'test.message';
     const response = 'test.response';
+    let transformer = null;
+    beforeAll(() => {
+        __kafkaConsumerConstruct.mockReset();
+        __kafkaProducerConstruct.mockReset();
+        __kafkaProducerSend.mockReset();
+        transformer = createTransformer(client, sourceTopic, destinationTopic, transform);
+    });
     test('returns instance of PipeConsumer', () => {
         expect(transformer).toBeInstanceOf(PipeConsumer);
         expect(__kafkaProducerConstruct).toHaveBeenCalledWith(client, {});
