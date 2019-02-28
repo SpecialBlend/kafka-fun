@@ -8,21 +8,7 @@ A functional/fluent utility for kafka, built on top of `kafka-node`.
 
 #### summary
 
-class that extends kafka Consumer and adds a `.pipe()` method
-
-### definition
-
-```
-/**
- * Extend Kafka Consumer class to add pipe method
- */
-export class PipeConsumer extends Consumer {
-    pipe(resolve) {
-        this.on('message', resolve);
-        return this;
-    }
-}
-```
+class that extends kafka Consumer and adds a fluent `.pipe()` method
 
 #### example
 
@@ -46,21 +32,6 @@ consumer.emit('message', 'hello, world!')
 #### summary
 
 function that returns an instance of `PipeConsumer`
-
-#### definition
-
-```
-/**
- * Create Piped Consumer
- * @param {KafkaClient} client: kafka client
- * @param {String} topic: name of topic
- * @param {Object|null} topicSettings: optional topic settings
- * @param {Object|null} options: optional consumer settings
- * @return {PipeConsumer}: PipeConsumer
- */
-export const createConsumer = (client, topic, topicSettings = {}, options = {}) =>
-    new PipeConsumer(client, [{ ...topicSettings, topic }], options);
-```
 
 #### example
 
@@ -95,44 +66,22 @@ consumer
 
 ```
 
-### createProducer
+### createSender
 
 #### summary
 
 higher order function that returns a curried `Producer.send` function which, when called, sends the given payload to the previously set topic
 
-#### definition
-
-```
-/**
- * Create Piped Producer
- * @param {KafkaClient} client: kafka client
- * @param {String} topic: name of topic
- * @param {Object|null} sendSettings: optional send settings
- * @param {Object|null} options: optional producer settings
- * @return {Function}: The resulting curried send function
- */
-export const createProducer = (client, topic, sendSettings = {}, options = {}) => {
-    const producer = new Producer(client, options);
-    const producerSend = promisify(producer.send.bind(producer));
-    return messages => producerSend([{
-        ...sendSettings,
-        topic,
-        messages,
-    }]);
-};
-```
-
 #### example
 
 ```
-import { Client, createProducer } from 'kafka-pipe'
+import { Client, createSender } from 'kafka-pipe'
 
 const kafkaHost = 'example.com:9092'
 const topic = 'test.topic'
 const client = new Client({ kafkaHost })
 const message = 'hello, world'
-const sendToTestTopic = createProducer(client, topic)
+const sendToTestTopic = createSender(client, topic)
 
 sendToTestTopic([message])
 
@@ -143,26 +92,6 @@ sendToTestTopic([message])
 #### summary
 
 function that returns a `PipeConsumer`, which pipes messages from `sourceTopic`, thru provided `transform` function, then into `destinationTopic`
-
-#### definition
-
-```
-/**
- * Create Transformer that reads from sourceTopic, transforms data then pipes to destinationTopic
- * @param {KafkaClient} client: kafka client
- * @param {String} sourceTopic: source kafka topic name
- * @param {String} destinationTopic: destination kafka topic name
- * @param {Function} transform: transformer function
- * @return {PipeConsumer}: PipeConsumer
- */
-export const createTransformer = (client, sourceTopic, destinationTopic, transform) => {
-    const sendToDestination = createProducer(client, destinationTopic);
-    const consumer = createConsumer(client, sourceTopic);
-    consumer.pipe(message => sendToDestination([transform(message)]));
-    return consumer;
-};
-
-```
 
 #### example
 

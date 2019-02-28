@@ -37,7 +37,7 @@ export const createConsumer = (client, topic, topicSettings = {}, options = {}) 
     new PipeConsumer(client, [{ ...topicSettings, topic }], options);
 
 /**
- * Create Piped Producer
+ * Create curried Producer.send function
  * @param {KafkaClient} client: kafka client
  * @param {String} topic: name of topic
  * @param {Object|null} sendSettings: optional send settings
