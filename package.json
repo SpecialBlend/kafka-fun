@@ -1,10 +1,11 @@
 {
   "scripts": {
-    "test": "scripts/test.sh",
-    "coverage": "scripts/coverage.sh",
-    "lint": "scripts/lint.sh",
-    "build": "scripts/build.sh",
-    "check": "scripts/check.sh"
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "lint": "eslint .",
+    "build": "webpack",
+    "check": "npm run build && npm run test && npm run coverage && npm run lint",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "@babel/cli": "latest",
@@ -43,5 +44,8 @@
   "dependencies": {
     "kafka-node": "^4.0.2",
     "ramda": "^0.26.1"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
