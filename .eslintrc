@@ -1,5 +1,5 @@
 {
-  "extends": "eslint-config-specialblend",
+  "extends": "@specialblend/eslint-config",
   "rules": {
     "no-underscore-dangle": "off",
     "no-undefined": "off"

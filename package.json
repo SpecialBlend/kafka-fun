@@ -41,11 +41,11 @@
     "babel-jest": "latest",
     "babel-loader": "latest",
     "eslint": "latest",
-    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git",
     "eslint-plugin-babel": "latest",
+    "@specialblend/eslint-config": "latest",
     "jest": "latest",
-    "should": "^13.2.3",
     "webpack": "latest",
-    "webpack-cli": "latest"
+    "webpack-cli": "latest",
+    "should": "^13.2.3"
   }
 }
