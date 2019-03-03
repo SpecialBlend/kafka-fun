@@ -1,4 +1,8 @@
 {
+  "name": "@specialblend/kafka-pipe",
+  "version": "0.0.0",
+  "description": "A functional/fluent utility for kafka",
+  "main": "index.js",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
@@ -7,26 +11,6 @@
     "check": "npm run build && npm run test && npm run coverage && npm run lint",
     "prepublish": "npm run build"
   },
-  "devDependencies": {
-    "@babel/cli": "latest",
-    "@babel/core": "latest",
-    "@babel/node": "latest",
-    "@babel/preset-env": "latest",
-    "babel-core": "bridge",
-    "babel-jest": "latest",
-    "babel-loader": "latest",
-    "eslint": "latest",
-    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git",
-    "eslint-plugin-babel": "latest",
-    "jest": "latest",
-    "should": "^13.2.3",
-    "webpack": "latest",
-    "webpack-cli": "latest"
-  },
-  "name": "kafka-pipe",
-  "version": "0.1.5-0",
-  "description": "A functional/fluent utility for kafka",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SpecialBlend/kafka-pipe.git"
@@ -47,5 +31,21 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/node": "latest",
+    "@babel/preset-env": "latest",
+    "babel-core": "bridge",
+    "babel-jest": "latest",
+    "babel-loader": "latest",
+    "eslint": "latest",
+    "eslint-config-specialblend": "git+https://github.com/SpecialBlend/eslint-config-specialblend.git",
+    "eslint-plugin-babel": "latest",
+    "jest": "latest",
+    "should": "^13.2.3",
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  }
 }
