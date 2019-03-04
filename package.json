@@ -1,6 +1,6 @@
 {
   "name": "@specialblend/kafka-pipe",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A functional/fluent utility for kafka",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SpecialBlend/kafka-pipe.git"
+    "url": "git+https://github.com/specialblend/kafka-pipe.git"
   },
   "keywords": [
     "functional",
@@ -22,9 +22,9 @@
   "author": "cj@specialblend.net",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SpecialBlend/kafka-pipe/issues"
+    "url": "https://github.com/specialblend/kafka-pipe/issues"
   },
-  "homepage": "https://github.com/SpecialBlend/kafka-pipe#readme",
+  "homepage": "https://github.com/specialblend/kafka-pipe#readme",
   "dependencies": {
     "kafka-node": "^4.0.2",
     "ramda": "^0.26.1"
