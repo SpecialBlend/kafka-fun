@@ -18,7 +18,7 @@ class that extends kafka Consumer and adds a fluent `.pipe()` method
 
 #### example
 
-```
+```javascript
 import { Client, PipeConsumer } from 'kafka-pipe'
 
 const kafkaHost = 'example.com:9092'
@@ -41,7 +41,7 @@ function that returns an instance of `PipeConsumer`
 
 #### example
 
-```
+```javascript
 import * as R from 'ramda'
 import { Client, createConsumer } from 'kafka-pipe'
 
@@ -80,7 +80,7 @@ higher order function that returns a curried `Producer.send` function which, whe
 
 #### example
 
-```
+```javascript
 import { Client, createSender } from 'kafka-pipe'
 
 const kafkaHost = 'example.com:9092'
@@ -101,7 +101,7 @@ function that returns a `PipeConsumer`, which pipes messages from `sourceTopic`,
 
 #### example
 
-```
+```javascript
 import { Client, createTransformer } from 'kafka-pipe'
 
 const normalizeMessage = () => {
