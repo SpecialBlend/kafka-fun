@@ -1,7 +1,12 @@
 import * as R from 'ramda';
 import { KafkaClient } from 'kafka-node';
 import { createConsumer, createSender, createTransformer, PipeConsumer } from './kafka-pipe';
-import { __kafkaConsumerConstruct, __kafkaProducerConstruct, __kafkaProducerSend } from '../__mocks__/kafka-node';
+import {
+    __kafkaConsumerConstruct,
+    __kafkaProducerConstruct,
+    __kafkaProducerRegisterEventListener,
+    __kafkaProducerSend,
+} from '../__mocks__/kafka-node';
 
 describe('createConsumer', () => {
     __kafkaConsumerConstruct.mockReset();
@@ -53,34 +58,52 @@ describe('createSender', () => {
     const optionalProducerSettings = {
         ackTimeoutMs: 500,
     };
-    const sendMessage = createSender(client, topic, optionalSendSettings, optionalProducerSettings);
-    test('returns instance of Function', () => {
-        expect(typeof sendMessage).toBe('function');
+    let sendMessage = null;
+    beforeAll(() => {
+        sendMessage = createSender(client, topic, optionalSendSettings, optionalProducerSettings);
     });
-    test('calls Producer constructor with expected data', () => {
-        expect(__kafkaProducerConstruct).toHaveBeenCalledWith(client, optionalProducerSettings);
+    test('returns a Promise', () => {
+        expect(sendMessage).toBeInstanceOf(Promise);
     });
-    test('resolver calls Producer.send with expected data', async() => {
-        __kafkaProducerSend.mockResolvedValueOnce(response);
-        const sendResponse = await sendMessage(messages);
-        expect(__kafkaProducerSend).toHaveBeenCalledWith([{
-            key,
-            topic,
-            messages,
-        }]);
-        expect(sendResponse).toBe(response);
+    test('registers `ready` event on Producer', () => {
+        expect(__kafkaProducerRegisterEventListener).toHaveBeenCalledWith('ready', expect.any(Function));
     });
-    test('is properly curried', async() => {
-        const expectedParams = [{ messages, topic }];
-        __kafkaProducerSend.mockReset();
-        await createSender(client)(topic)(messages);
-        expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
-        __kafkaProducerSend.mockReset();
-        await createSender(client)(topic, {})(messages);
-        expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
-        __kafkaProducerSend.mockReset();
-        await createSender(client)(topic, {}, {})(messages);
-        expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
+    describe('resolved value', () => {
+        let resolvedSendMessage = null;
+        beforeAll(async() => {
+            resolvedSendMessage = await sendMessage;
+        });
+        test('is a Function', () => {
+            expect(typeof resolvedSendMessage).toBe('function');
+        });
+        test('calls Producer constructor with expected data', () => {
+            expect(__kafkaProducerConstruct).toHaveBeenCalledWith(client, optionalProducerSettings);
+        });
+        test('resolver calls Producer.send with expected data', async() => {
+            __kafkaProducerSend.mockResolvedValueOnce(response);
+            const sendResponse = await resolvedSendMessage(messages);
+            expect(__kafkaProducerSend).toHaveBeenCalledWith([{
+                key,
+                topic,
+                messages,
+            }]);
+            expect(sendResponse).toBe(response);
+        });
+        test('is properly curried', async() => {
+            const expectedParams = [{
+                messages,
+                topic,
+            }];
+            __kafkaProducerSend.mockReset();
+            await (await createSender(client)(topic))(messages);
+            expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
+            __kafkaProducerSend.mockReset();
+            await (await createSender(client)(topic, {}))(messages);
+            expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
+            __kafkaProducerSend.mockReset();
+            await (await createSender(client)(topic, {}, {}))(messages);
+            expect(__kafkaProducerSend).toHaveBeenCalledWith(expectedParams);
+        });
     });
 });
 
@@ -92,11 +115,11 @@ describe('createTransformer', () => {
     const message = 'test.message';
     const response = 'test.response';
     let transformer = null;
-    beforeAll(() => {
+    beforeAll(async() => {
         __kafkaConsumerConstruct.mockReset();
         __kafkaProducerConstruct.mockReset();
         __kafkaProducerSend.mockReset();
-        transformer = createTransformer(client, sourceTopic, destinationTopic, transform);
+        transformer = await createTransformer(client, sourceTopic, destinationTopic, transform);
     });
     test('returns instance of PipeConsumer', () => {
         expect(transformer).toBeInstanceOf(PipeConsumer);
@@ -112,10 +135,10 @@ describe('createTransformer', () => {
             messages: [transform(message)],
         }]);
     });
-    test('is properly curried', () => {
-        expect(typeof createTransformer(client)).toBe('function');
-        expect(typeof createTransformer(client, sourceTopic)).toBe('function');
-        expect(typeof createTransformer(client, sourceTopic, destinationTopic)).toBe('function');
-        expect(createTransformer(client)(sourceTopic)(destinationTopic)(transform)).toBeInstanceOf(PipeConsumer);
+    test('is properly curried', async() => {
+        expect(typeof await createTransformer(client)).toBe('function');
+        expect(typeof await createTransformer(client, sourceTopic)).toBe('function');
+        expect(typeof await createTransformer(client, sourceTopic, destinationTopic)).toBe('function');
+        expect(await createTransformer(client)(sourceTopic)(destinationTopic)(transform)).toBeInstanceOf(PipeConsumer);
     });
 });
