@@ -40,7 +40,7 @@ export class Producer extends EventEmitter {
     constructor(...params) {
         super(...params);
         __kafkaProducerConstruct(...params);
-        this.__setupMockStatus();
+        setTimeout(this.__setupMockStatus.bind(this), 100);
     }
     on(...params) {
         super.on(...params);

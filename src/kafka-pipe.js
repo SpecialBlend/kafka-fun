@@ -48,12 +48,20 @@ export const createConsumer = R.curry(
  */
 export const createSender = R.curry(
     (client, topic, sendSettings = {}, options = {}) => {
-        const producer = new PipeProducer(client, options);
-        return messages => producer.send([{
-            ...sendSettings,
-            topic,
-            messages,
-        }]);
+        return new Promise(resolve => {
+            const producer = new PipeProducer(client, options);
+            producer.on('ready', () => {
+                resolve(
+                    messages => producer.send([
+                        {
+                            ...sendSettings,
+                            topic,
+                            messages,
+                        },
+                    ])
+                );
+            });
+        });
     }
 );
 
@@ -66,8 +74,8 @@ export const createSender = R.curry(
  * @return {PipeConsumer}: PipeConsumer
  */
 export const createTransformer = R.curry(
-    (client, sourceTopic, destinationTopic, transform) => {
-        const sendToDestination = createSender(client, destinationTopic);
+    async(client, sourceTopic, destinationTopic, transform) => {
+        const sendToDestination = await createSender(client, destinationTopic);
         const consumer = createConsumer(client, sourceTopic);
         consumer.pipe(message => sendToDestination([transform(message)]));
         return consumer;
