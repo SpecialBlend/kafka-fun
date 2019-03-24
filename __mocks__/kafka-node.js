@@ -1,57 +1,33 @@
+import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
-export const __kafkaClientConstruct = jest.fn();
-export const __kafkaConsumerConstruct = jest.fn();
-export const __kafkaConsumerRegisterEventListener = jest.fn();
+export const __kafkaProducerQueryMockStatus__ = jest.fn(R.always(null));
+export const __kafkaProducerSend__ = jest.fn(R.always(null));
 
-export const __kafkaProducerConstruct = jest.fn();
-export const __kafkaProducerRegisterEventListener = jest.fn();
-export const __kafkaProducerSend = jest.fn();
-export const __kafkaProducerOnError = jest.fn();
-export const __kafkaProducerQueryMockStatus = jest.fn(() => null);
-
-export class KafkaClient {
-    constructor(...params) {
-        __kafkaClientConstruct(...params);
-    }
-}
-
-export class Consumer extends EventEmitter {
-    constructor(...params) {
-        super(...params);
-        __kafkaConsumerConstruct(...params);
-    }
-    on(...params) {
-        super.on(...params);
-        __kafkaConsumerRegisterEventListener(...params);
-    }
-}
-
-export class Producer extends EventEmitter {
-    __setupMockStatus() {
-        this.on('error', __kafkaProducerOnError);
-        const err = __kafkaProducerQueryMockStatus();
-        if (err !== null) {
-            this.emit('error', err);
-            return;
-        }
+async function setupMockStatus() {
+    try {
+        await __kafkaProducerQueryMockStatus__();
         this.emit('ready');
+    } catch (err) {
+        this.emit('error', err);
     }
+}
+
+export const KafkaClient = jest.fn(class extends EventEmitter {});
+
+export const Consumer = jest.fn(class extends EventEmitter {});
+
+export const Producer = jest.fn(class extends EventEmitter {
     constructor(...params) {
         super(...params);
-        __kafkaProducerConstruct(...params);
-        setTimeout(this.__setupMockStatus.bind(this), 100);
-    }
-    on(...params) {
-        super.on(...params);
-        __kafkaProducerRegisterEventListener(...params);
+        setTimeout(setupMockStatus.bind(this), 10);
     }
     async send(params, callback) {
         try {
-            const response = await __kafkaProducerSend(params);
+            const response = await __kafkaProducerSend__(params);
             return callback(null, response);
         } catch (err) {
             return callback(err);
         }
     }
-}
+});
