@@ -1,8 +1,7 @@
 import * as R from 'ramda';
-import { EventEmitter } from 'events';
+import { GenericMockType } from './support';
 
 export const __kafkaProducerQueryMockStatus__ = jest.fn(R.always(null));
-export const __kafkaProducerSend__ = jest.fn(R.always(null));
 
 async function setupMockStatus() {
     try {
@@ -13,21 +12,15 @@ async function setupMockStatus() {
     }
 }
 
-export const KafkaClient = jest.fn(class extends EventEmitter {});
+export class KafkaClient extends GenericMockType {}
 
-export const Consumer = jest.fn(class extends EventEmitter {});
+export class Consumer extends GenericMockType {}
 
-export const Producer = jest.fn(class extends EventEmitter {
-    constructor(...params) {
-        super(...params);
-        setTimeout(setupMockStatus.bind(this), 10);
+export const Producer = class extends GenericMockType {
+    constructor(...props) {
+        super(...props);
+        setTimeout(setupMockStatus.bind(this), 1);
     }
-    async send(params, callback) {
-        try {
-            const response = await __kafkaProducerSend__(params);
-            return callback(null, response);
-        } catch (err) {
-            return callback(err);
-        }
+    async send() {
     }
-});
+};

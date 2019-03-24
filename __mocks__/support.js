@@ -1,4 +1,14 @@
+import { EventEmitter } from 'events';
+import { Printable } from '../src/lib/printer';
+
 require('jest-extended');
+
+expect.extend({
+    toBePrintable(received) {
+        expect(received).toHaveProperty('print', Printable.prototype.print);
+    },
+});
+
 const { log, info, debug, warn, error } = console;
 
 /**
@@ -28,3 +38,14 @@ afterAll(() => {
     console.warn = warn;
     console.error = error;
 });
+
+export const __construct__ = Symbol('__construct__');
+
+export class GenericMockType extends EventEmitter {
+    constructor(...props) {
+        super(...props);
+        this[__construct__](...props);
+    }
+}
+
+GenericMockType.prototype[__construct__] = jest.fn();
