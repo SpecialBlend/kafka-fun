@@ -6,7 +6,7 @@ import { __construct__ } from '../../__mocks__/support';
 
 describe('PipeConsumer', () => {
     let consumer;
-    let consumerEventSpy;
+    let eventSpy;
     const client = Symbol('client');
     const topic = Symbol('topic');
     const topicOptions = Symbol('topicOptions');
@@ -24,22 +24,29 @@ describe('PipeConsumer', () => {
         test('is also a function', () => {
             expect(consumer).toBeFunction();
         });
-        test('is instance of Callable', () => {
-            expect(consumer).toBeInstanceOf(Callable);
-        });
         describe('pipe method', () => {
             const handler = jest.fn();
             let afterPipe;
             beforeAll(() => {
-                consumerEventSpy = jest.spyOn(consumer, 'on');
+                eventSpy = jest.spyOn(consumer, 'on');
                 afterPipe = consumer.pipe(handler);
             });
             test('registers message event to handler', () => {
-                expect(consumerEventSpy).toHaveBeenCalledWith('message', handler);
+                expect(eventSpy).toHaveBeenCalledWith('message', handler);
             });
             test('is fluent', () => {
                 expect(afterPipe).toBe(consumer);
             });
+        });
+    });
+    describe('is Callable', () => {
+        test('is instance of Callable', () => {
+            expect(consumer).toBeInstanceOf(Callable);
+        });
+        test('when called, functions as pipe method', () => {
+            const handler = jest.fn();
+            consumer(handler);
+            expect(eventSpy).toHaveBeenCalledWith('message', handler);
         });
     });
     test('is Printable', () => {
@@ -48,19 +55,19 @@ describe('PipeConsumer', () => {
 });
 
 describe('createConsumer', () => {
-    let createConsumerResult;
+    let result;
     const client = Symbol('client');
     const topic = Symbol('topic');
     const topicOptions = Symbol('topicOptions');
     const consumerOptions = Symbol('consumerOptions');
     beforeAll(() => {
-        createConsumerResult = createConsumer(client, topic, topicOptions, consumerOptions);
+        result = createConsumer(client, topic, topicOptions, consumerOptions);
     });
     test('is a function', () => {
         expect(createConsumer).toBeFunction();
     });
     test('instance of PipeConsumer', () => {
-        expect(createConsumerResult).toBeInstanceOf(PipeConsumer);
+        expect(result).toBeInstanceOf(PipeConsumer);
     });
     test('expected results', () => {
         expect(Consumer.prototype[__construct__]).toHaveBeenCalledWith(client, [{ ...topicOptions, topic }], consumerOptions);

@@ -4,9 +4,7 @@ import { superclass } from '@specialblend/superclass';
 import { __call__, Callable } from '@specialblend/callable';
 import { EventEmitter } from 'events';
 import { Printable } from './printer';
-import { promisify } from 'util';
-
-const __producerSend__ = Symbol('__producerSend__');
+import { promisify } from './common';
 
 /**
  * Callable kafka Producer with print method
@@ -19,16 +17,7 @@ export class PipeProducer extends superclass(Callable, Producer, Printable, Even
      */
     constructor(...args) {
         super(...args);
-        this[__producerSend__] = promisify(this.producer.send.bind(this));
-    }
-
-    /**
-     * Send payload
-     * @param messages
-     * @returns {Promise<*>}
-     */
-    async send(messages) {
-        return this[__producerSend__](messages);
+        this.send = promisify(this.send);
     }
 
     /**
