@@ -1,6 +1,7 @@
-import { mixin, superclass } from '@specialblend/superclass';
 import { Consumer as KafkaConsumer } from 'kafka-node';
-import { __call__, Callable } from '@specialblend/callable';
+import { EventEmitter } from 'events';
+import { mixin, superclass } from '@specialblend/superclass';
+import { Callable, __call__ } from '@specialblend/callable';
 import { Printable } from './printer';
 import * as R from 'ramda';
 
@@ -16,7 +17,7 @@ class Consumer extends mixin(KafkaConsumer,
 /**
  * Callable kafka Consumer with pipe and print methods
  */
-export class PipeConsumer extends superclass(Callable, Consumer, Printable) {
+export class PipeConsumer extends superclass(Callable, Consumer, Printable, EventEmitter) {
 
     /**
      * Pipe incoming messages to handler

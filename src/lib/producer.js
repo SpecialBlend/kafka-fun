@@ -1,7 +1,8 @@
 import * as R from 'ramda';
+import { Producer } from 'kafka-node';
 import { superclass } from '@specialblend/superclass';
 import { __call__, Callable } from '@specialblend/callable';
-import { Producer } from 'kafka-node';
+import { EventEmitter } from 'events';
 import { Printable } from './printer';
 import { promisify } from 'util';
 
@@ -10,7 +11,7 @@ const __producerSend__ = Symbol('__producerSend__');
 /**
  * Callable kafka Producer with print method
  */
-export class PipeProducer extends superclass(Callable, Producer, Printable) {
+export class PipeProducer extends superclass(Callable, Producer, Printable, EventEmitter) {
 
     /**
      * Extend Producer
