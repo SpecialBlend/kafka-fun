@@ -37,7 +37,7 @@ describe('PipeSender', () => {
                     ...payloadOptions,
                     topic,
                     messages,
-                });
+                }, expect.any(Function));
             });
         });
     });
