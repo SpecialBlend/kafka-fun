@@ -22,10 +22,10 @@ when instance is called directly, acts like PipeProducer.send</p>
 <dd><p>Callable kafka PipeProducer which allows presetting a destination topic and options</p>
 </dd>
 <dt><a href="#PipeTransformer">PipeTransformer</a></dt>
-<dd><p>Consumer/producer mixin
+<dd><p>Consumer/producer mixin that
 pipes messages from <code>sourceTopic</code>
-into <code>transformer</code> function
-and sends result to <code>destinationTopic</code>
+into <code>transformer</code> function,
+and sends result to <code>destinationTopic</code>,
 or <code>deadLetterTopic</code> on error</p>
 </dd>
 <dt><a href="#Client">Client</a></dt>
@@ -198,10 +198,10 @@ Make instance callable alias of `this.send`
 <a name="PipeTransformer"></a>
 
 ## PipeTransformer
-Consumer/producer mixin
+Consumer/producer mixin that
 pipes messages from `sourceTopic`
-into `transformer` function
-and sends result to `destinationTopic`
+into `transformer` function,
+and sends result to `destinationTopic`,
 or `deadLetterTopic` on error
 
 **Kind**: global class  

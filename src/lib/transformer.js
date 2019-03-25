@@ -6,10 +6,10 @@ import { PipeProducer } from './producer';
 import { PipeConsumer } from './consumer';
 
 /**
- * Consumer/producer mixin
+ * Consumer/producer mixin that
  * pipes messages from `sourceTopic`
- * into `transformer` function
- * and sends result to `destinationTopic`
+ * into `transformer` function,
+ * and sends result to `destinationTopic`,
  * or `deadLetterTopic` on error
  */
 export class PipeTransformer extends superclass(EventEmitter, Printable) {
