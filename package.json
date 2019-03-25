@@ -33,7 +33,7 @@
   "homepage": "https://github.com/specialblend/kafka-pipe#readme",
   "dependencies": {
     "@specialblend/callable": "0.0.5",
-    "@specialblend/superclass": "0.0.1",
+    "@specialblend/superclass": "0.0.6",
     "kafka-node": "^4.0.2",
     "ramda": "^0.26.1"
   },
