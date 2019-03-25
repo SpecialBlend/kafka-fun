@@ -1,57 +1,27 @@
-import { EventEmitter } from 'events';
+import { GenericMockType } from './support';
 
-export const __kafkaClientConstruct = jest.fn();
-export const __kafkaConsumerConstruct = jest.fn();
-export const __kafkaConsumerRegisterEventListener = jest.fn();
+export const __kafkaProducerQueryMockStatus__ = jest.fn(() => Promise.resolve(null));
+export const __producerSend__ = jest.fn(() => Promise.resolve(null));
 
-export const __kafkaProducerConstruct = jest.fn();
-export const __kafkaProducerRegisterEventListener = jest.fn();
-export const __kafkaProducerSend = jest.fn();
-export const __kafkaProducerOnError = jest.fn();
-export const __kafkaProducerQueryMockStatus = jest.fn(() => null);
+export class KafkaClient extends GenericMockType() {}
 
-export class KafkaClient {
-    constructor(...params) {
-        __kafkaClientConstruct(...params);
-    }
-}
+export class Consumer extends GenericMockType() {}
 
-export class Consumer extends EventEmitter {
-    constructor(...params) {
-        super(...params);
-        __kafkaConsumerConstruct(...params);
+export const Producer = class extends GenericMockType() {
+    constructor(...props) {
+        super(...props);
     }
-    on(...params) {
-        super.on(...params);
-        __kafkaConsumerRegisterEventListener(...params);
+    on(...args) {
+        super.on(...args);
+        setTimeout(async() => {
+            try {
+                await __kafkaProducerQueryMockStatus__();
+                this.emit('ready');
+            } catch (err) {
+                this.emit('error', err);
+            }
+        }, 100);
     }
-}
+};
 
-export class Producer extends EventEmitter {
-    __setupMockStatus() {
-        this.on('error', __kafkaProducerOnError);
-        const err = __kafkaProducerQueryMockStatus();
-        if (err !== null) {
-            this.emit('error', err);
-            return;
-        }
-        this.emit('ready');
-    }
-    constructor(...params) {
-        super(...params);
-        __kafkaProducerConstruct(...params);
-        setTimeout(this.__setupMockStatus.bind(this), 100);
-    }
-    on(...params) {
-        super.on(...params);
-        __kafkaProducerRegisterEventListener(...params);
-    }
-    async send(params, callback) {
-        try {
-            const response = await __kafkaProducerSend(params);
-            return callback(null, response);
-        } catch (err) {
-            return callback(err);
-        }
-    }
-}
+Producer.prototype.send = __producerSend__;

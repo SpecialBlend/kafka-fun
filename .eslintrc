@@ -2,6 +2,13 @@
   "extends": "@specialblend/eslint-config",
   "rules": {
     "no-underscore-dangle": "off",
-    "no-undefined": "off"
+    "no-undefined": "off",
+    "valid-jsdoc": "off",
+    "padded-blocks": "off",
+    "max-params": "off",
+    "init-declarations": "off",
+    "prefer-reflect": "off",
+    "no-invalid-this": "off",
+    "new-cap": "off"
   }
 }
