@@ -1,6 +1,6 @@
 {
   "name": "@specialblend/kafka-pipe",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A functional/fluent utility for kafka",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
