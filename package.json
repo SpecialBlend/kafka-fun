@@ -36,6 +36,7 @@
     "@specialblend/callable": "0.0.5",
     "@specialblend/superclass": "0.0.6",
     "kafka-node": "^4.0.2",
+    "lodash.throttle": "^4.1.1",
     "ramda": "^0.26.1"
   },
   "files": [
