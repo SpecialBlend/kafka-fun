@@ -6,12 +6,22 @@ import { PipeProducer } from './producer';
 import { PipeConsumer } from './consumer';
 
 /**
- * A consumer/sender mixin that transforms payloads
- * from sourceTopic and pipes to destinationTopic
- * and sends failed payloads to deadLetterTopic if provided
- * or back into sourceTopic if not provided
+ * Consumer/producer mixin
+ * pipes messages from `sourceTopic`
+ * into `transformer` function
+ * and sends result to `destinationTopic`
+ * or `deadLetterTopic` on error
  */
 export class PipeTransformer extends superclass(EventEmitter, Printable) {
+
+    /**
+     * create a PipeTransformer
+     * @param {Function} transformer the transformer function
+     * @param {Client} client kafka Client
+     * @param {String }sourceTopic name of topic to read from
+     * @param {String} destinationTopic name of topic to send to
+     * @param {String} deadLetterTopic name of topic to send failed payloads
+     */
     constructor(transformer, client, sourceTopic, destinationTopic, deadLetterTopic) {
         super();
         this.consumer = new PipeConsumer(client, sourceTopic);
@@ -38,7 +48,8 @@ export class PipeTransformer extends superclass(EventEmitter, Printable) {
 }
 
 /**
- * Create curried PipeTransformer
+ * Curried factory of PipeTransformer
+ * @return {PipeTransformer}
  */
 export const createTransformer = R.curry(
     (transformer, client, sourceTopic, destinationTopic, deadLetterTopic) =>

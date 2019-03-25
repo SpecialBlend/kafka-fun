@@ -13,7 +13,8 @@
     "build:dev": "rollup -c -w",
     "check": "npm run build && npm run test && npm run coverage && npm run lint",
     "pretest": "npm run build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "docs": "npm run build && cat support/README.md > README.md && jsdoc2md dist/index.esm.js >> README.md"
   },
   "repository": {
     "type": "git",
@@ -53,6 +54,7 @@
     "eslint-plugin-babel": "^5.3.0",
     "jest": "^24.5.0",
     "jest-extended": "^0.11.1",
+    "jsdoc-to-markdown": "^4.0.1",
     "rollup": "^1.7.2",
     "should": "^13.2.3",
     "webpack": "latest",

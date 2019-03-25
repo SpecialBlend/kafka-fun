@@ -2,16 +2,16 @@ import { PipeProducer } from './producer';
 import * as R from 'ramda';
 
 /**
- * A callable kafka Producer with preset topic
+ * Callable kafka PipeProducer which allows presetting a destination topic and options
  */
 export class PipeSender extends PipeProducer {
 
     /**
      * Curry topic and payload options
-     * @param client
-     * @param topic
-     * @param payloadOptions
-     * @param producerOptions
+     * @param {Client} client kafka client
+     * @param {String} topic kafka topic name
+     * @param {Object?} payloadOptions options to include with outgoing payloads
+     * @param {Object?} producerOptions producer options
      */
     constructor(client, topic, payloadOptions = {}, producerOptions = {}) {
         super(client, producerOptions);
@@ -20,9 +20,9 @@ export class PipeSender extends PipeProducer {
     }
 
     /**
-     * Send payload to preset topic with preset options
-     * @param messages
-     * @returns {Promise<*>}
+     * Send messages to preset topic, with preset options
+     * @param {Array<String>} messages an array of messages to send
+     * @returns {Promise<*>} returned Promise
      */
     send(messages) {
         const { topic, payloadOptions } = this;
@@ -35,7 +35,8 @@ export class PipeSender extends PipeProducer {
 }
 
 /**
- * Create curried PipeProducer
+ * Curried factory of PipeProducer
+ * @return {PipeSender}
  */
 export const createSender = R.curry(
     (client, topic, payloadOptions = {}, producerOptions = {}) =>

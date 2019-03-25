@@ -1,4 +1,16 @@
-import { mixin } from '@specialblend/superclass';
 import { KafkaClient } from 'kafka-node';
 
-export class Client extends mixin(KafkaClient, (kafkaHost, options) => ({ kafkaHost, ...options })) {}
+/**
+ * Kafka Client
+ */
+export class Client extends KafkaClient {
+
+    /**
+     * Create a kafka Client
+     * @param {String} kafkaHost kafka host
+     * @param {Object?} options options
+     */
+    constructor(kafkaHost, options) {
+        super({ kafkaHost, ...options });
+    }
+}

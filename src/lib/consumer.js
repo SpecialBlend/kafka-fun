@@ -15,14 +15,14 @@ class Consumer extends mixin(KafkaConsumer,
 }
 
 /**
- * Callable kafka Consumer with pipe and print methods
+ * Callable kafka Consumer with pipe and error helper methods
  */
 export class PipeConsumer extends superclass(Callable, Consumer, Printable, EventEmitter) {
 
     /**
-     * Pipe incoming messages to handler
-     * @param handler
-     * @returns {PipeConsumer}
+     * Pipe incoming messages to provided handler
+     * @param {Function} handler message handler function
+     * @returns {PipeConsumer} self
      */
     pipe(handler) {
         this.on('message', handler);
@@ -30,8 +30,9 @@ export class PipeConsumer extends superclass(Callable, Consumer, Printable, Even
     }
 
     /**
-     * Alias for on('error')
-     * @param handler
+     * Alias for this.on('error')
+     * @param {Function} handler error handler function
+     * @return {PipeConsumer} self
      */
     error(handler) {
         this.on('error', handler);
@@ -39,17 +40,18 @@ export class PipeConsumer extends superclass(Callable, Consumer, Printable, Even
     }
 
     /**
-     * Make instance callable and forward to this.pipe
-     * @param args
-     * @returns {PipeConsumer}
+     * Make instance callable alias of `this.pipe`
+     * @param {Function} handler message handler function
+     * @returns {PipeConsumer} self
      */
-    [__call__](...args) {
-        return this.pipe(...args);
+    [__call__](handler) {
+        return this.pipe(handler);
     }
 }
 
 /**
- * Create curried PipeConsumer
+ * Curried factory of PipeConsumer
+ * @return {PipeConsumer}
  */
 export const createConsumer = R.curry(
     (client, topic, topicOptions = {}, consumerOptions = {}) =>
