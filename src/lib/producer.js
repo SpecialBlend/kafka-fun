@@ -6,10 +6,16 @@ import { EventEmitter } from 'events';
 import { Printable } from './printer';
 import { promisify } from './common';
 
+const __send__ = Symbol('__send__');
+
+class PromiseProducer extends Producer {}
+
+PromiseProducer.prototype[__send__] = promisify(PromiseProducer.prototype.send);
+
 /**
  * Callable kafka Producer with print method
  */
-export class PipeProducer extends superclass(Callable, Producer, Printable, EventEmitter) {
+export class PipeProducer extends superclass(Callable, PromiseProducer, Printable, EventEmitter) {
 
     /**
      * Extend Producer
@@ -17,7 +23,10 @@ export class PipeProducer extends superclass(Callable, Producer, Printable, Even
      */
     constructor(...args) {
         super(...args);
-        this.send = promisify(this.send);
+    }
+
+    send(...args) {
+        return this[__send__](...args);
     }
 
     /**

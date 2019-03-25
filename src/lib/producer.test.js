@@ -3,7 +3,6 @@ import { PipeProducer, createProducer } from './producer';
 import { Printable } from './printer';
 import { Producer } from 'kafka-node';
 import { __construct__ } from '../../__mocks__/support';
-import { promisify } from './common';
 import { __producerSend__ } from '../../__mocks__/kafka-node';
 
 describe('PipeProducer', () => {
@@ -19,6 +18,11 @@ describe('PipeProducer', () => {
     test('calls underlying Consumer with expected props', () => {
         expect(Producer.prototype[__construct__]).toHaveBeenCalledWith(client, producerOptions);
     });
+    describe('prototype', () => {
+        test('has send method', () => {
+            expect(PipeProducer.prototype).toHaveProperty('send', expect.any(Function));
+        });
+    });
     describe('instance', () => {
         test('is also a function', () => {
             expect(producer).toBeFunction();
@@ -27,17 +31,12 @@ describe('PipeProducer', () => {
             expect(producer).toBeInstanceOf(Callable);
         });
         describe('send method', () => {
-            test('is promisifed Producer.send', () => {
-                expect(producer.send).not.toBe(Producer.prototype.send);
-                expect(producer.send).toBe(promisify(Producer.prototype.send));
+            test('calls underlying Producer.send with expected data', () => {
+                const messages = Symbol('messages');
+                producer.send(messages);
+                expect(__producerSend__).toHaveBeenCalledWith(messages, expect.any(Function));
             });
-            describe('send method', () => {
-                test('calls underlying Producer.send with expected data', () => {
-                    const messages = Symbol('messages');
-                    producer.send(messages);
-                    expect(__producerSend__).toHaveBeenCalledWith(messages, expect.any(Function));
-                });
-            });
+
         });
     });
     describe('is Callable', () => {
