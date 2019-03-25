@@ -156,6 +156,7 @@ Callable kafka PipeProducer which allows presetting a destination topic and opti
 * [PipeSender](#PipeSender)
     * [new PipeSender(client, topic, payloadOptions, producerOptions)](#new_PipeSender_new)
     * [.send(messages)](#PipeSender+send) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.__call__(payload)](#PipeSender+__call__) ⇒ <code>Promise.&lt;\*&gt;</code>
 
 <a name="new_PipeSender_new"></a>
 
@@ -181,6 +182,18 @@ Send messages to preset topic, with preset options
 | Param | Type | Description |
 | --- | --- | --- |
 | messages | <code>Array.&lt;String&gt;</code> | an array of messages to send |
+
+<a name="PipeSender+__call__"></a>
+
+### pipeSender.\_\_call\_\_(payload) ⇒ <code>Promise.&lt;\*&gt;</code>
+Make instance callable alias of `this.send`
+
+**Kind**: instance method of [<code>PipeSender</code>](#PipeSender)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - result  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>Array.&lt;String&gt;</code> | payload |
 
 <a name="PipeTransformer"></a>
 

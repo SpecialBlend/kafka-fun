@@ -1,5 +1,6 @@
-import { PipeProducer } from './producer';
 import * as R from 'ramda';
+import { __call__ } from '@specialblend/callable';
+import { PipeProducer } from './producer';
 
 /**
  * Callable kafka PipeProducer which allows presetting a destination topic and options
@@ -31,6 +32,15 @@ export class PipeSender extends PipeProducer {
             topic,
             messages,
         });
+    }
+
+    /**
+     * Make instance callable alias of `this.send`
+     * @param {Array<String>} payload payload
+     * @returns {Promise<*>} result
+     */
+    [__call__](payload) {
+        return this.send(payload);
     }
 }
 
