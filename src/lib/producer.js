@@ -13,34 +13,42 @@ class PromiseProducer extends Producer {}
 PromiseProducer.prototype[__send__] = promisify(PromiseProducer.prototype.send);
 
 /**
- * Callable kafka Producer with print method
+ * Callable kafka Producer
+ * when instance is called directly, acts like PipeProducer.send
  */
 export class PipeProducer extends superclass(Callable, PromiseProducer, Printable, EventEmitter) {
 
     /**
-     * Extend Producer
-     * @param args
+     * Create
+     * @param {Client} client kafka client
+     * @param {Object?} options opyions
      */
-    constructor(...args) {
-        super(...args);
-    }
-
-    send(...args) {
-        return this[__send__](...args);
+    constructor(client, options) {
+        super(client, options);
     }
 
     /**
-     * Make instance callable and forward to this.send
-     * @param args
-     * @returns {Promise<*>}
+     * Send a payload
+     * @param {Array<String>} payload payload
+     * @returns {Promise<*>} result
      */
-    [__call__](...args) {
-        return this.send(...args);
+    send(payload) {
+        return this[__send__](payload);
+    }
+
+    /**
+     * Make instance callable alias of `this.send`
+     * @param {Array<String>} payload payload
+     * @returns {Promise<*>} result
+     */
+    [__call__](payload) {
+        return this.send(payload);
     }
 }
 
 /**
- * Create curried PipeProducer
+ * Curried factory of PipeProducer
+ * @return {PipeProducer}
  */
 export const createProducer = R.curry(
     (client, producerOptions = {}) =>

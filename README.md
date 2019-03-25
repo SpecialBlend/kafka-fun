@@ -8,110 +8,255 @@ A functional/fluent utility for kafka, built on top of `kafka-node`.
 npm install @specialblend/kafka-pipe
 ```
 
-## Features
+## Classes
 
-### PipeConsumer
+<dl>
+<dt><a href="#PipeConsumer">PipeConsumer</a></dt>
+<dd><p>Callable kafka Consumer with pipe and error helper methods</p>
+</dd>
+<dt><a href="#PipeProducer">PipeProducer</a></dt>
+<dd><p>Callable kafka Producer
+when instance is called directly, acts like PipeProducer.send</p>
+</dd>
+<dt><a href="#PipeSender">PipeSender</a></dt>
+<dd><p>Callable kafka PipeProducer which allows presetting a destination topic and options</p>
+</dd>
+<dt><a href="#PipeTransformer">PipeTransformer</a></dt>
+<dd><p>Consumer/producer mixin
+pipes messages from <code>sourceTopic</code>
+into <code>transformer</code> function
+and sends result to <code>destinationTopic</code>
+or <code>deadLetterTopic</code> on error</p>
+</dd>
+<dt><a href="#Client">Client</a></dt>
+<dd><p>Kafka Client</p>
+</dd>
+</dl>
 
-#### summary
+## Constants
 
-class that extends kafka Consumer and adds a fluent `.pipe()` method
+<dl>
+<dt><a href="#createConsumer">createConsumer</a> ⇒ <code><a href="#PipeConsumer">PipeConsumer</a></code></dt>
+<dd><p>Curried factory of PipeConsumer</p>
+</dd>
+<dt><a href="#createProducer">createProducer</a> ⇒ <code><a href="#PipeProducer">PipeProducer</a></code></dt>
+<dd><p>Curried factory of PipeProducer</p>
+</dd>
+<dt><a href="#createSender">createSender</a> ⇒ <code><a href="#PipeSender">PipeSender</a></code></dt>
+<dd><p>Curried factory of PipeProducer</p>
+</dd>
+<dt><a href="#createTransformer">createTransformer</a> ⇒ <code><a href="#PipeTransformer">PipeTransformer</a></code></dt>
+<dd><p>Curried factory of PipeTransformer</p>
+</dd>
+</dl>
 
-#### example
+<a name="PipeConsumer"></a>
 
-```javascript
-import { Client, PipeConsumer } from 'kafka-pipe'
+## PipeConsumer
+Callable kafka Consumer with pipe and error helper methods
 
-const kafkaHost = 'example.com:9092'
-const topic = 'test.topic'
-const client = new Client({ kafkaHost })
-const consumer = new PipeConsumer(client, [{ topic ])
+**Kind**: global class  
 
-consumer.pipe(console.log)
+* [PipeConsumer](#PipeConsumer)
+    * [.pipe(handler)](#PipeConsumer+pipe) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+    * [.error(handler)](#PipeConsumer+error) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+    * [.__call__(handler)](#PipeConsumer+__call__) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
 
-// prints 'hello, world!' to console.log
-consumer.emit('message', 'hello, world!')
+<a name="PipeConsumer+pipe"></a>
 
-```
+### pipeConsumer.pipe(handler) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+Pipe incoming messages to provided handler
 
-### createConsumer
+**Kind**: instance method of [<code>PipeConsumer</code>](#PipeConsumer)  
+**Returns**: [<code>PipeConsumer</code>](#PipeConsumer) - self  
 
-#### summary
+| Param | Type | Description |
+| --- | --- | --- |
+| handler | <code>function</code> | message handler function |
 
-function that returns an instance of `PipeConsumer`
+<a name="PipeConsumer+error"></a>
 
-#### example
+### pipeConsumer.error(handler) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+Alias for this.on('error')
 
-```javascript
-import * as R from 'ramda'
-import { Client, createConsumer } from 'kafka-pipe'
+**Kind**: instance method of [<code>PipeConsumer</code>](#PipeConsumer)  
+**Returns**: [<code>PipeConsumer</code>](#PipeConsumer) - self  
 
-const printMessage = ({ topic, value }) => {
-    console.log('received message')
-    console.log('topic: ', topic)
-    console.log('message: ', value)
-}
+| Param | Type | Description |
+| --- | --- | --- |
+| handler | <code>function</code> | error handler function |
 
-const sendMessageToS3 = R.pipe(
-    R.prop('value'),
-    R.reverse,
-    R.tap(message => console.log('sending message to s3', message)),
-    s3Put,
-)
+<a name="PipeConsumer+__call__"></a>
 
-const kafkaHost = 'example.com:9092'
+### pipeConsumer.\_\_call\_\_(handler) ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+Make instance callable alias of `this.pipe`
 
-const topic = 'test.topic'
+**Kind**: instance method of [<code>PipeConsumer</code>](#PipeConsumer)  
+**Returns**: [<code>PipeConsumer</code>](#PipeConsumer) - self  
 
-const client = new Client({ kafkaHost })
+| Param | Type | Description |
+| --- | --- | --- |
+| handler | <code>function</code> | message handler function |
 
-const consumer = createConsumer(client, topic)
+<a name="PipeProducer"></a>
 
-consumer
-    .pipe(printMessage)
-    .pipe(sendMessageToS3)
+## PipeProducer
+Callable kafka Producer
+when instance is called directly, acts like PipeProducer.send
 
-```
+**Kind**: global class  
 
-### createSender
+* [PipeProducer](#PipeProducer)
+    * [new PipeProducer(client, options)](#new_PipeProducer_new)
+    * [.send(payload)](#PipeProducer+send) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.__call__(payload)](#PipeProducer+__call__) ⇒ <code>Promise.&lt;\*&gt;</code>
 
-#### summary
+<a name="new_PipeProducer_new"></a>
 
-higher order function that returns a curried `Producer.send` function which, when called, sends the given payload to the previously set topic
+### new PipeProducer(client, options)
+Create
 
-#### example
 
-```javascript
-import { Client, createSender } from 'kafka-pipe'
+| Param | Type | Description |
+| --- | --- | --- |
+| client | [<code>Client</code>](#Client) | kafka client |
+| options | <code>Object</code> | opyions |
 
-const kafkaHost = 'example.com:9092'
-const topic = 'test.topic'
-const client = new Client({ kafkaHost })
-const message = 'hello, world'
-const sendToTestTopic = createSender(client, topic)
+<a name="PipeProducer+send"></a>
 
-sendToTestTopic([message])
+### pipeProducer.send(payload) ⇒ <code>Promise.&lt;\*&gt;</code>
+Send a payload
 
-```
+**Kind**: instance method of [<code>PipeProducer</code>](#PipeProducer)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - result  
 
-### createTransformer
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>Array.&lt;String&gt;</code> | payload |
 
-#### summary
+<a name="PipeProducer+__call__"></a>
 
-function that returns a `PipeConsumer`, which pipes messages from `sourceTopic`, thru provided `transform` function, then into `destinationTopic`
+### pipeProducer.\_\_call\_\_(payload) ⇒ <code>Promise.&lt;\*&gt;</code>
+Make instance callable alias of `this.send`
 
-#### example
+**Kind**: instance method of [<code>PipeProducer</code>](#PipeProducer)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - result  
 
-```javascript
-import { Client, createTransformer } from 'kafka-pipe'
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>Array.&lt;String&gt;</code> | payload |
 
-const normalizeMessage = () => {
-    // normalize message before forwarding ...
-}
+<a name="PipeSender"></a>
 
-const kafkaHost = 'example.com:9092'
-const sourceTopic = 'test.source.topic'
-const destinationTopic = 'test.destination.topic'
-const client = new Client({ kafkaHost })
-const consumer = createTransformer(client, sourceTopic, destinationTopic, normalizeMessage) 
+## PipeSender
+Callable kafka PipeProducer which allows presetting a destination topic and options
 
-```
+**Kind**: global class  
+
+* [PipeSender](#PipeSender)
+    * [new PipeSender(client, topic, payloadOptions, producerOptions)](#new_PipeSender_new)
+    * [.send(messages)](#PipeSender+send) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.__call__(payload)](#PipeSender+__call__) ⇒ <code>Promise.&lt;\*&gt;</code>
+
+<a name="new_PipeSender_new"></a>
+
+### new PipeSender(client, topic, payloadOptions, producerOptions)
+Curry topic and payload options
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| client | [<code>Client</code>](#Client) | kafka client |
+| topic | <code>String</code> | kafka topic name |
+| payloadOptions | <code>Object</code> | options to include with outgoing payloads |
+| producerOptions | <code>Object</code> | producer options |
+
+<a name="PipeSender+send"></a>
+
+### pipeSender.send(messages) ⇒ <code>Promise.&lt;\*&gt;</code>
+Send messages to preset topic, with preset options
+
+**Kind**: instance method of [<code>PipeSender</code>](#PipeSender)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - returned Promise  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| messages | <code>Array.&lt;String&gt;</code> | an array of messages to send |
+
+<a name="PipeSender+__call__"></a>
+
+### pipeSender.\_\_call\_\_(payload) ⇒ <code>Promise.&lt;\*&gt;</code>
+Make instance callable alias of `this.send`
+
+**Kind**: instance method of [<code>PipeSender</code>](#PipeSender)  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - result  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>Array.&lt;String&gt;</code> | payload |
+
+<a name="PipeTransformer"></a>
+
+## PipeTransformer
+Consumer/producer mixin
+pipes messages from `sourceTopic`
+into `transformer` function
+and sends result to `destinationTopic`
+or `deadLetterTopic` on error
+
+**Kind**: global class  
+<a name="new_PipeTransformer_new"></a>
+
+### new PipeTransformer(transformer, client, sourceTopic, destinationTopic, deadLetterTopic)
+create a PipeTransformer
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| transformer | <code>function</code> | the transformer function |
+| client | [<code>Client</code>](#Client) | kafka Client |
+| sourceTopic | <code>String</code> | name of topic to read from |
+| destinationTopic | <code>String</code> | name of topic to send to |
+| deadLetterTopic | <code>String</code> | name of topic to send failed payloads |
+
+<a name="Client"></a>
+
+## Client
+Kafka Client
+
+**Kind**: global class  
+<a name="new_Client_new"></a>
+
+### new Client(kafkaHost, options)
+Create a kafka Client
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| kafkaHost | <code>String</code> | kafka host |
+| options | <code>Object</code> | options |
+
+<a name="createConsumer"></a>
+
+## createConsumer ⇒ [<code>PipeConsumer</code>](#PipeConsumer)
+Curried factory of PipeConsumer
+
+**Kind**: global constant  
+<a name="createProducer"></a>
+
+## createProducer ⇒ [<code>PipeProducer</code>](#PipeProducer)
+Curried factory of PipeProducer
+
+**Kind**: global constant  
+<a name="createSender"></a>
+
+## createSender ⇒ [<code>PipeSender</code>](#PipeSender)
+Curried factory of PipeProducer
+
+**Kind**: global constant  
+<a name="createTransformer"></a>
+
+## createTransformer ⇒ [<code>PipeTransformer</code>](#PipeTransformer)
+Curried factory of PipeTransformer
+
+**Kind**: global constant  
