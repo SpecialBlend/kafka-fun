@@ -1,9 +1,10 @@
 import { Callable } from '@specialblend/callable';
 import { PipeProducer, createProducer } from './producer';
 import { Printable } from './printer';
-import { Consumer, Producer } from 'kafka-node';
+import { Producer } from 'kafka-node';
 import { __construct__ } from '../../__mocks__/support';
 import { promisify } from './common';
+import { __producerSend__ } from '../../__mocks__/kafka-node';
 
 describe('PipeProducer', () => {
     let producer;
@@ -16,7 +17,7 @@ describe('PipeProducer', () => {
         expect(PipeProducer).toBeFunction();
     });
     test('calls underlying Consumer with expected props', () => {
-        expect(Consumer.prototype[__construct__]).toHaveBeenCalledWith(client, producerOptions);
+        expect(Producer.prototype[__construct__]).toHaveBeenCalledWith(client, producerOptions);
     });
     describe('instance', () => {
         test('is also a function', () => {
@@ -30,6 +31,13 @@ describe('PipeProducer', () => {
                 expect(producer.send).not.toBe(Producer.prototype.send);
                 expect(producer.send).toBe(promisify(Producer.prototype.send));
             });
+            describe('send method', () => {
+                test('calls underlying Producer.send with expected data', () => {
+                    const messages = Symbol('messages');
+                    producer.send(messages);
+                    expect(__producerSend__).toHaveBeenCalledWith(messages, expect.any(Function));
+                });
+            });
         });
     });
     describe('is Callable', () => {
@@ -37,10 +45,9 @@ describe('PipeProducer', () => {
             expect(producer).toBeInstanceOf(Callable);
         });
         test('when called, functions as send method', () => {
-            const message = Symbol('message');
-            const send = jest.spyOn(producer, 'send');
-            producer(message);
-            expect(send).toHaveBeenCalledWith(message);
+            const messages = Symbol('messages');
+            producer(messages);
+            expect(__producerSend__).toHaveBeenCalledWith(messages, expect.any(Function));
         });
     });
     test('is Printable', () => {
@@ -58,10 +65,10 @@ describe('createProducer', () => {
     test('is a function', () => {
         expect(createProducer).toBeFunction();
     });
-    test('instance of PipeConsumer', () => {
+    test('returns instance of PipeConsumer', () => {
         expect(result).toBeInstanceOf(PipeProducer);
     });
-    test('expected results', () => {
+    test('works as expected', () => {
         expect(Producer.prototype[__construct__]).toHaveBeenCalledWith(client, producerOptions);
     });
 });

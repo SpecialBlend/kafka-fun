@@ -39,5 +39,9 @@ export class PipeSender extends PipeProducer {
  */
 export const createSender = R.curry(
     (client, topic, payloadOptions = {}, producerOptions = {}) =>
-        new PipeSender(client, topic, payloadOptions, producerOptions),
+        new Promise((resolve, reject) => {
+            const sender = new PipeSender(client, topic, payloadOptions, producerOptions);
+            sender.on('ready', () => resolve(sender));
+            sender.on('error', reject);
+        })
 );

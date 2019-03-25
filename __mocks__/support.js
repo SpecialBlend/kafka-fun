@@ -41,11 +41,15 @@ afterAll(() => {
 
 export const __construct__ = Symbol('__construct__');
 
-export class GenericMockType extends EventEmitter {
+export class GenericMockClass extends EventEmitter {
     constructor(...props) {
         super(...props);
         this[__construct__](...props);
     }
 }
 
-GenericMockType.prototype[__construct__] = jest.fn();
+export const GenericMockType = () => {
+    const generic = class extends GenericMockClass {};
+    generic.prototype[__construct__] = jest.fn();
+    return generic;
+};

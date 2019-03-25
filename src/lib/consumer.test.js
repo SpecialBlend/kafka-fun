@@ -66,10 +66,10 @@ describe('createConsumer', () => {
     test('is a function', () => {
         expect(createConsumer).toBeFunction();
     });
-    test('instance of PipeConsumer', () => {
+    test('returns instance of PipeConsumer', () => {
         expect(result).toBeInstanceOf(PipeConsumer);
     });
-    test('expected results', () => {
+    test('works as expected', () => {
         expect(Consumer.prototype[__construct__]).toHaveBeenCalledWith(client, [{ ...topicOptions, topic }], consumerOptions);
     });
 });

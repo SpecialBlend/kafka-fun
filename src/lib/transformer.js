@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { mixin, superclass } from '@specialblend/superclass';
 import { Callable } from '@specialblend/callable';
+import { EventEmitter } from 'events';
 import { Printable } from './printer';
 import { PipeProducer } from './producer';
 import { PipeConsumer } from './consumer';
@@ -9,7 +10,7 @@ import { PipeConsumer } from './consumer';
  * Map transformer constructor to PipeConsumer constructor
  * @type {Class}
  */
-const TransformerConsumer = mixin(
+const Consumer = mixin(
     PipeConsumer,
     (transformer, client, sourceTopic) => [client, sourceTopic],
 );
@@ -18,7 +19,7 @@ const TransformerConsumer = mixin(
  * Map transformer constructor to PipeSender constructor
  * @type {Class}
  */
-const TransformerProducer = mixin(
+const Producer = mixin(
     PipeProducer,
     (transformer, client, sourceTopic, destinationTopic) => [client, destinationTopic],
 );
@@ -29,25 +30,27 @@ const TransformerProducer = mixin(
  * and sends failed payloads to deadLetterTopic if provided
  * or back into sourceTopic if not provided
  */
-export class PipeTransformer extends superclass(Callable, TransformerConsumer, TransformerProducer, Printable) {
-    constructor(transformer, client, sourceTopic, destinationTopic, deadLetterTopic = sourceTopic) {
-        super();
-        this.pipe(async(...args) => {
-            const payload = await transformer(...args);
-            try {
-                return await this.send({
-                    topic: destinationTopic,
-                    messages: payload,
-                });
-            } catch (err) {
-                this.emit('error', err);
-                return await this.send({
-                    topic: deadLetterTopic,
-                    messages: payload,
-                });
-            }
-        });
-    }
+export class PipeTransformer extends superclass(Callable, Consumer, Producer, Printable, EventEmitter) {
+    // constructor(transformer, client, sourceTopic, destinationTopic, deadLetterTopic = sourceTopic) {
+    //     super();
+    //     this.on('ready', () => {
+    //         // this.pipe(async(...args) => {
+    //         //     const payload = await transformer(...args);
+    //         //     try {
+    //         //         return await this.send({
+    //         //             topic: destinationTopic,
+    //         //             messages: payload,
+    //         //         });
+    //         //     } catch (err) {
+    //         //         this.emit('error', err);
+    //         //         return await this.send({
+    //         //             topic: deadLetterTopic,
+    //         //             messages: payload,
+    //         //         });
+    //         //     }
+    //         // });
+    //     });
+    // }
 }
 
 /**
