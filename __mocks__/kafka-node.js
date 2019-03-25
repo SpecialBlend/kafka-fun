@@ -1,7 +1,7 @@
 import { GenericMockType } from './support';
 
 export const __kafkaProducerQueryMockStatus__ = jest.fn(() => Promise.resolve(null));
-export const __producerSend__ = jest.fn();
+export const __producerSend__ = jest.fn(() => Promise.resolve(null));
 
 export class KafkaClient extends GenericMockType() {}
 
