@@ -12,7 +12,7 @@ import { PipeConsumer } from './consumer';
  * or back into sourceTopic if not provided
  */
 export class PipeTransformer extends superclass(EventEmitter, Printable) {
-    constructor(transformer, client, sourceTopic, destinationTopic, deadLetterTopic = sourceTopic) {
+    constructor(transformer, client, sourceTopic, destinationTopic, deadLetterTopic) {
         super();
         this.consumer = new PipeConsumer(client, sourceTopic);
         this.producer = new PipeProducer(client);
@@ -41,6 +41,6 @@ export class PipeTransformer extends superclass(EventEmitter, Printable) {
  * Create curried PipeTransformer
  */
 export const createTransformer = R.curry(
-    (transformer, client, sourceTopic, destinationTopic, deadLetterTopic = sourceTopic) =>
+    (transformer, client, sourceTopic, destinationTopic, deadLetterTopic) =>
         new PipeTransformer(transformer, client, sourceTopic, destinationTopic, deadLetterTopic),
 );

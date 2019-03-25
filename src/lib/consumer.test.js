@@ -38,6 +38,20 @@ describe('PipeConsumer', () => {
                 expect(afterPipe).toBe(consumer);
             });
         });
+        describe('error method', () => {
+            const handler = jest.fn();
+            let afterError;
+            beforeAll(() => {
+                eventSpy = jest.spyOn(consumer, 'on');
+                afterError = consumer.error(handler);
+            });
+            test('registers message event to handler', () => {
+                expect(eventSpy).toHaveBeenCalledWith('error', handler);
+            });
+            test('is fluent', () => {
+                expect(afterError).toBe(consumer);
+            });
+        });
     });
     describe('is Callable', () => {
         test('is instance of Callable', () => {
@@ -71,5 +85,23 @@ describe('createConsumer', () => {
     });
     test('works as expected', () => {
         expect(Consumer.prototype[__construct__]).toHaveBeenCalledWith(client, [{ ...topicOptions, topic }], consumerOptions);
+    });
+});
+
+describe('createConsumer without options', () => {
+    let result;
+    const client = Symbol('client');
+    const topic = Symbol('topic');
+    beforeAll(() => {
+        result = createConsumer(client, topic);
+    });
+    test('is a function', () => {
+        expect(createConsumer).toBeFunction();
+    });
+    test('returns instance of PipeConsumer', () => {
+        expect(result).toBeInstanceOf(PipeConsumer);
+    });
+    test('works as expected', () => {
+        expect(Consumer.prototype[__construct__]).toHaveBeenCalledWith(client, [{ topic }], {});
     });
 });

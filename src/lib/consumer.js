@@ -35,6 +35,7 @@ export class PipeConsumer extends superclass(Callable, Consumer, Printable, Even
      */
     error(handler) {
         this.on('error', handler);
+        return this;
     }
 
     /**

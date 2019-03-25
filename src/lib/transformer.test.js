@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { PipeTransformer } from './transformer';
+import { PipeTransformer, createTransformer } from './transformer';
 import { PipeConsumer } from './consumer';
 import { PipeProducer } from './producer';
 import { Printable } from './printer';
@@ -62,5 +62,20 @@ describe('PipeTransformer', () => {
     });
     test('is Printable', () => {
         expect(PipeTransformer.prototype).toHaveProperty('print', Printable.prototype.print);
+    });
+});
+
+describe('createTransformer', () => {
+    test('is a function', () => {
+        expect(createTransformer).toBeFunction();
+    });
+    test('returns instance of PipeTransformer', () => {
+        const client = Symbol('client');
+        const sourceTopic = Symbol('sourceTopic');
+        const destinationTopic = Symbol('destinationTopic');
+        const deadLetterTopic = Symbol('deadLetterTopic');
+        const transform = R.compose(JSON.parse, R.prop('value'));
+        const transformer = createTransformer(transform, client, sourceTopic, destinationTopic, deadLetterTopic);
+        expect(transformer).toBeInstanceOf(PipeTransformer);
     });
 });

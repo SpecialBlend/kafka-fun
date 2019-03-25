@@ -71,3 +71,20 @@ describe('createProducer', () => {
         expect(Producer.prototype[__construct__]).toHaveBeenCalledWith(client, producerOptions);
     });
 });
+
+describe('createProducer without options', () => {
+    let result;
+    const client = Symbol('client');
+    beforeAll(() => {
+        result = createProducer(client);
+    });
+    test('is a function', () => {
+        expect(createProducer).toBeFunction();
+    });
+    test('returns instance of PipeConsumer', () => {
+        expect(result).toBeInstanceOf(PipeProducer);
+    });
+    test('works as expected', () => {
+        expect(Producer.prototype[__construct__]).toHaveBeenCalledWith(client, {});
+    });
+});
